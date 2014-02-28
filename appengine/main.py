@@ -39,7 +39,7 @@ def getBalance(address=''):
     mReturn = balance
     query = request.query.decode()
     if (len(query) > 0):
-        mReturn = query['callback'] + '(' + balance + ')'
+        mReturn = query['callback'] + '({balance:' + balance + '})'
 
     logging.info("Returning data for getBalance(" + address + "): " + mReturn)
     return mReturn

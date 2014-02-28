@@ -166,10 +166,10 @@ angular.module('app.services', []).
                 success: function(fn) {
 					$http.jsonp(url + '?callback=JSON_CALLBACK').success(function(data) {
 						$log.info('jsonp result:', data);
-					    fn(data);
+					    fn(data['balance']);
 					}).error(function(data, status, headers, config) {
 						$log.warn('error! data:', data, ', status:', status, ', headers:', headers, ', config:', config);
-						fn(0); // error - assume balance is 0
+						fn(0, true); 
 					});
                 }
             };

@@ -54,8 +54,11 @@ angular.module('app.controllers', []).
         $scope.loadData = function() {
 			$scope.balanceTotal = 0;
 			angular.forEach($scope.wallets, function(wallet) {
-				blockexplorerAPIService.getBalance(wallet.address).success(function (response) {
-					wallet.balance = Number(response);
+				blockexplorerAPIService.getBalance(wallet.address).success(function (balance, isError) {
+					if (isError) {
+						wallet.error = 'Error - is wallet address correct?';
+					}
+					wallet.balance = Number(balance);
 					$log.info('balance for', wallet.address, 'is', wallet.balance);
 					$scope.balanceTotal += wallet.balance;
 				});

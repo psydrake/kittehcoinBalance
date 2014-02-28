@@ -202,3 +202,7 @@ body {
 .actionButtons {
 	padding-top:10px;
 }
+
+.error {
+	color: red;
+}
