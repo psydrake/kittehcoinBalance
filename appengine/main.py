@@ -8,6 +8,7 @@ from google.appengine.api import memcache
 # import the Bottle framework
 from server.lib.bottle import Bottle, request, response, template
 import json, logging, StringIO, urllib2
+from decimal import *
 
 # TODO: name and list your controllers here so their routes become accessible.
 from server.controllers import RESOURCE_NAME_controller
@@ -47,35 +48,46 @@ def getBalance(address=''):
 @bottle.route('/api/trading-meow')
 @bottle.route('/api/trading-meow/')
 @bottle.route('/api/trading-meow/<currency:re:[A-Z][A-Z][A-Z]>')
-def tradingMEOW(currency=''):
+def tradingMEOW(currency='BTC'):
     response.content_type = 'application/json; charset=utf-8'
 
-    mReturn = memcache.get('trading_meow_' + currency)
-    if (not mReturn):
-        logging.warn("No data found in memcache for trading_ltc_" + currency)
-        mReturn = '{}'
+    mReturn = '{}'
+    meowBtc = json.loads(memcache.get('trading_MEOW_BTC'))
+    if (not meowBtc):
+        logging.warn("No data found in memcache for trading_MEOW_BTC")
+        return mReturn
+
+    if (currency is not 'BTC'):
+        btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
+        if (not btcCurrency):
+            logging.warn("No data found in memcache for trading_BTC_" + currency)
+            return mReturn
+        logging.info('meowBtc: ' + str(meowBtc) + ', ' + 'btcCurrency: ' + str(btcCurrency))
+        mReturn = Decimal(meowBtc['price']) * Decimal(btcCurrency['price'])
+    else:
+        mReturn = Decimal(meowBtc['price'])
 
     query = request.query.decode()
     if (len(query) > 0):
-        mReturn = query['callback'] + '(' + mReturn + ')'
+        mReturn = query['callback'] + '({price:' + str(mReturn) + '})'
 
-    logging.info("Returning data for trading_ltc_" + currency + ", starting with: " + mReturn[0:100])
-    return mReturn
+    logging.info("Returning data for trading MEOW_" + currency + ": " + str(mReturn))
+    return str(mReturn)
 
-def pullTradingPair(currency='BTC'):
-    data = urllib2.urlopen(TRADING_PAIR_URL + 'MEOW_' + currency)
+def pullTradingPair(currency1='MEOW', currency2='BTC'):
+    data = urllib2.urlopen(TRADING_PAIR_URL + currency1 + '_' + currency2)
     dataDict = json.load(data)
 
     tradingData = json.dumps(dataDict)
-    memcache.set('trading_meow_' + currency, tradingData)
-    logging.info("Stored in memcache for key trading_meow_" + currency + ", starting with: " + tradingData[0:20])
+    memcache.set('trading_' + currency1 + '_' + currency2, tradingData)
+    logging.info('Stored in memcache for key trading_' + currency1 + '_' + currency2 + ': ' + tradingData)
 
 @bottle.route('/tasks/pull-cryptocoincharts-data')
 def pullCryptocoinchartsData():
-    pullTradingPair('BTC')
-    pullTradingPair('CNY')
-    pullTradingPair('EUR')
-    pullTradingPair('USD')
+    pullTradingPair('MEOW', 'BTC')
+    pullTradingPair('BTC', 'CNY')
+    pullTradingPair('BTC', 'EUR')
+    pullTradingPair('BTC', 'USD')
     return "Done"
 
 @bottle.error(404)

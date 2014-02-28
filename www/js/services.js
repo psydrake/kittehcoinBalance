@@ -95,7 +95,7 @@ angular.module('app.services', []).
 			// get String value by key
             getValue: function(key) {
 				var value = '';
-				if (key === 'currency' || key ==='currency_non_btc') {
+				if (key === 'preferredCurrency') {
 					value = 'USD'; // default - this is overwritten by what is in store
 				}
                 if (this.store && this.store.get(key)) {
@@ -129,21 +129,24 @@ angular.module('app.services', []).
             symbols: ['BTC', 'CNY', 'EUR', 'USD']
         }
     }).
-    factory('cryptocoinchartsAPIService', function($http, utilService) {
+    factory('cryptocoinchartsAPIService', function($http, $log, utilService) {
         var cccAPI = {};
 
-		// For CryptoCoinCharts API documentation, see: http://www.cryptocoincharts.info/v2/tools/api
-        cccAPI.getLTCTrading = function(currency) {
-			var url = 'https://litecoineasycheck.appspot.com/api/trading-ltc/';
+        cccAPI.convert = function(currency, balance) {
+			var url = 'http://kittehcoinbalance.appspot.com/api/trading-meow/';
 
             if (currency) {
 		        url = url + currency;
             }
+			$log.info('in cccAPIService.convert(). about to call', url);
 
             return {
                 success: function(fn) {
+					$log.info('in success! fn:', fn);
 					$http.jsonp(url + '?callback=JSON_CALLBACK').success(function(data, status, headers, config) {
-						fn(data);
+						var price  = data['price'];
+						$log.info('got price for currency', currency, ':', price);
+						fn(Number(price) * Number(balance));
 					});
                 }
             };
@@ -156,7 +159,7 @@ angular.module('app.services', []).
 
         beAPI.getBalance = function(address) {
 			//var url = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/';
-			var url = 'http://localhost:10080/api/balance/';
+			var url = 'http://kittehcoinbalance.appspot.com/api/balance/';
 
             if (address) {
 		        url = url + address;
