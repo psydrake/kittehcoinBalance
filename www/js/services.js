@@ -143,7 +143,7 @@ angular.module('app.services', []).
 
             return {
                 success: function(fn) {
-					$log.info('in success! fn:', fn);
+					//$log.info('in success! fn:', fn);
 					$http.jsonp(url + '?callback=JSON_CALLBACK').success(function(data, status, headers, config) {
 						var price  = data['price'];
 						$log.info('got price for currency', currency, ':', price);
