@@ -1,0 +1,15 @@
+{
+  "name": "KittehCoin Balance",
+  "description": "See how meowny KittehCoin you own. Backend caches data from the cryptocoincharts.info API.",
+  "version": "1.0.1",
+  "manifest_version": 2,
+  "icons": { "16": "KittehCoin_16.png", "128": "KittehCoin_128.png" },
+  "app": {
+    "urls": [
+	"http://d2f04lgzuo9226.cloudfront.net/main.html"
+    ],
+    "launch": {
+	"web_url": "d2f04lgzuo9226.cloudfront.net/main.html"
+    }
+  }
+}

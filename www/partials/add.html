@@ -1,0 +1,25 @@
+<div class="jumbotron">
+    <div class="row-fluid">
+		<div class="span12">
+			<form ng-submit="save()">
+				<table class="table-balances">
+					<tr>
+						<td>Label:</td>
+						<td><input ng-model="wallet.label" placeholder="My Wallet" size="20" maxlength="20"/></td>
+					</tr>
+					<tr>
+						<td>Address:</td>
+						<td><input ng-model="wallet.address" size="40" maxlength="40"/></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="actionButtons">
+								<button><i class="fa fa-plus plus"></i> Add Wallet</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>

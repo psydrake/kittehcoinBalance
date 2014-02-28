@@ -1,0 +1,26 @@
+<div class="jumbotron">
+    <div class="row-fluid">
+		<div class="span12">
+
+			<form ng-submit="save()">
+				<div>
+					<a href="javascript:void(0)" ng-click="add()"><span class="plus"><i class="fa fa-plus"></i></span> Add Wallet</a>
+				</div>
+				<table class="table-balances" ng-repeat="wallet in wallets">
+					<tr>
+						<td><a href="javascript:void(0)" ng-click="remove($index)"><i class="fa fa-minus minus"></i> Remove</a></td>
+						<td><input ng-model="wallet.label" placeholder="My Wallet" size="20" maxlength="20"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input ng-model="wallet.address" size="40" maxlength="40"/></td>
+					</tr>
+				</table>
+				<div class="actionButtons">
+					<button><i class="fa fa-save save"></i> Save</button>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
