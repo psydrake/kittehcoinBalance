@@ -7,6 +7,7 @@ angular.module('app.services', []).
         return {
             // from: http://www.xe.com/symbols.php
             currencyMap: {
+				"BTC": "฿",
                 "LTC": "Ł",
                 "USD": "$",
                 "GBP": "£",

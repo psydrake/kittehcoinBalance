@@ -57,7 +57,8 @@ def tradingMEOW(currency='BTC'):
         logging.warn("No data found in memcache for trading_MEOW_BTC")
         return mReturn
 
-    if (currency is not 'BTC'):
+    if (currency != 'BTC'):
+        logging.info('currency is: ' + currency)
         btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
         if (not btcCurrency):
             logging.warn("No data found in memcache for trading_BTC_" + currency)
@@ -65,7 +66,7 @@ def tradingMEOW(currency='BTC'):
         logging.info('meowBtc: ' + str(meowBtc) + ', ' + 'btcCurrency: ' + str(btcCurrency))
         mReturn = Decimal(meowBtc['price']) * Decimal(btcCurrency['price'])
     else:
-        mReturn = Decimal(meowBtc['price'])
+        mReturn = meowBtc['price']
 
     query = request.query.decode()
     if (len(query) > 0):
