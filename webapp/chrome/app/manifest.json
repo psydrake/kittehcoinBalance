@@ -1,6 +1,6 @@
 {
   "name": "KittehCoin Balance",
-  "description": "See how meowny KittehCoin you own. Backend caches data from the cryptocoincharts.info API.",
+  "description": "See how meowny KittehCoin you own and how much they're worth. Backend uses data from kittehcoinblockexplorer.com and cryptocoincharts.info.",
   "version": "1.0.1",
   "manifest_version": 2,
   "icons": { "16": "KittehCoin_16.png", "128": "KittehCoin_128.png" },
