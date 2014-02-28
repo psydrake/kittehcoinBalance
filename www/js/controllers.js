@@ -30,7 +30,7 @@ angular.module('app.controllers', []).
 		$scope.remove = function(index) {
 			$scope.wallets.splice(index, 1);
 			$log.info('wallets:', $scope.wallets);
-			settingsService.setObject('wallets', $scope.wallets);
+			//settingsService.setObject('wallets', $scope.wallets);
 		}
 
 		$scope.add = function() {
