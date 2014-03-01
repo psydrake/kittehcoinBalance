@@ -9,20 +9,26 @@ angular.module('app.controllers', []).
 		}
 
 		$scope.save = function() {
-			$log.info('in save():', $scope.wallet);
 			var wallets = settingsService.getObject('wallets');
 
-			wallets.push($scope.wallet);
-			$log.info('wallets:', wallets);
-			
-			// save wallets to local storage
-			settingsService.setObject('wallets', wallets);
-			$location.path('/home');
+			// do some simple validation
+			$scope.errors = [];
+			var error = utilService.validateWallet($scope.wallet, wallets);
+			if (error) {
+				$scope.errors.push(error);
+			}
+			else { // no errors, let's add new wallet and redirect to home
+				wallets.push($scope.wallet);
+
+				// save wallets to local storage
+				settingsService.setObject('wallets', wallets);
+				$location.path('/home');
+			}
 		}
 
 		customService.trackPage('/add');
     }).
-	controller('editController', function($scope, $location, $log, settingsService) {
+	controller('editController', function($scope, $location, $log, settingsService, utilService) {
 		$scope.wallets = settingsService.getObject('wallets');
 
 		$scope.cancel = function() {
@@ -40,8 +46,22 @@ angular.module('app.controllers', []).
 		}
 
 		$scope.save = function() {
-			settingsService.setObject('wallets', $scope.wallets);
-			$location.path('/home');
+			// do some basic validation
+			$scope.errors = [];
+			for (var i=0; i < $scope.wallets.length; i++) {
+				var error = utilService.validateWallet($scope.wallets[i]);
+				if (error) {
+					$scope.errors.push(error);
+				}
+			}
+
+			if ($scope.errors.length > 0) { // if errors, remove duplicates
+				$scope.errors = _.uniq($scope.errors, false)
+			}
+			else { // if no errors, save wallets and redirect to home
+				settingsService.setObject('wallets', $scope.wallets);
+				$location.path('/home');
+			}
 		}
 	}).
     controller('homeController', function($scope, $rootScope, $location, $log, blockexplorerAPIService, cryptocoinchartsAPIService, utilService, settingsService, customService) {

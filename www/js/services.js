@@ -48,19 +48,32 @@ angular.module('app.services', []).
 				}
 			},
 
-			getPriceCompareClass: function(price1, price2) {
-				if (!price1 || !price2) {
-					return 'priceUnknown';
+			// Simple validation for wallet object. Optional second parameter is list of existing wallets.
+			// returns:
+			//    String with error message if there is a problem
+			//    0 if validation passes
+			validateWallet: function(wallet, wallets) {
+				if (!wallet) {
+					return 'Wallet data is missing!';
 				}
-				else if (price1 > price2) {
-					return 'priceUp';
+
+				if (!wallet.address) {
+					return 'Wallet Address is required.';
 				}
-				else if (price1 < price2) {
-					return 'priceDown';
+
+				if (!wallet.label) {
+					return 'Wallet Label is required.';
 				}
-				else {
-					return 'priceSame';
+
+				if (wallets) {
+					for (var i=0; i < wallets.length; i++) {
+						if (wallets[i]['address'] === wallet.address) {
+							return 'Wallet address is a duplicate.';
+						}
+					}
 				}
+
+				return 0; // all is good
 			},
 
 			getAppVersion: function() {

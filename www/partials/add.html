@@ -2,6 +2,11 @@
     <div class="row-fluid">
 		<div class="span12">
 			<form ng-submit="save()">
+				<div class="error" ng-show="errors">
+					<div ng-repeat="error in errors" ng-bind="error">
+					</div>
+				</div>
+
 				<table class="table-balances">
 					<tr>
 						<td>Label:</td>
