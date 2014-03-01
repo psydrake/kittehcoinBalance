@@ -41,8 +41,30 @@ angular.module('app.controllers', []).
 		}
 
 		$scope.add = function() {
-			$log.info('add wallet');
-			$location.path('/add');
+			// Don't let user go to "Add Wallet" page if there are unsaved changes on page
+			// NOTE: _.isEqual($scope.wallets, savedWallets)) doesn't always work, due to $hashkey
+			var hasUnsavedChanges = false;
+			var savedWallets = settingsService.getObject('wallets');
+
+			if (savedWallets.length !== $scope.wallets.length) {
+				hasUnsavedChanges = true;
+			}
+			else {
+				for (var i=0; i<savedWallets.length; i++) {
+					if (savedWallets[i].address !== $scope.wallets[i].address ||
+						savedWallets[i].label !== $scope.wallets[i].label) {
+						hasUnsavedChanges = true;
+						break;
+					}
+				}
+			}
+
+			if (hasUnsavedChanges) {
+				$scope.errors = ['You have unsaved changes. Please save or cancel before adding a new wallet.'];
+			}
+			else {
+				$location.path('/add');
+			}
 		}
 
 		$scope.save = function() {
