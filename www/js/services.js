@@ -82,8 +82,11 @@ angular.module('app.services', []).
 				if (key && this.store) {
 					var strObj = this.store.get(key);
 					obj = JSON.parse(strObj);
-					$log.info('getObject: ', obj);
+					if (key === 'wallets' && !obj) {
+						obj = []; // return empty list if no wallets have been saved
+					}
 				}
+				$log.info('getObject(). key:', key, ', value:', obj);
 				return obj;
 			},
 
@@ -139,7 +142,6 @@ angular.module('app.services', []).
             if (currency) {
 		        url = url + currency;
             }
-			$log.info('in cccAPIService.convert(). about to call', url);
 
             return {
                 success: function(fn) {
