@@ -99,7 +99,7 @@ angular.module('app.services', []).
 						obj = []; // return empty list if no wallets have been saved
 					}
 				}
-				$log.info('getObject(). key:', key, ', value:', obj);
+				//$log.info('getObject(). key:', key, ', value:', obj);
 				return obj;
 			},
 
