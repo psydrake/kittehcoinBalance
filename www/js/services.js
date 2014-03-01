@@ -161,7 +161,6 @@ angular.module('app.services', []).
         var beAPI = {};
 
         beAPI.getBalance = function(address) {
-			//var url = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/';
 			var url = 'http://kittehcoinbalance.appspot.com/api/balance/';
 
             if (address) {

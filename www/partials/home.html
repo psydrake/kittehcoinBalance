@@ -9,18 +9,24 @@
 	</div>
     <div class="row-fluid">
 		<div class="span12">
-			<!-- ng-repeat... track by wallet.address avoid ngRepeat:dupes error -->
-			<table class="table-balances" ng-repeat="wallet in data.wallets track by wallet.address">
-				<tr>
-					<td><strong>{{wallet.label}}</strong></td>
-				</tr>
-				<tr>
-					<td>{{wallet.address}}</td>
-				</tr>
-				<tr>
-					<td><span ng-show="wallet.error" class="error" ng-bind="wallet.error"></span> <div style="float:right" ng-class="{balance: !wallet.error, error: wallet.error}" class="currency">{{wallet.balance | number:4}}</div></td>
-				</tr>
-			</table>
+		<!-- ng-repeat... track by wallet.address avoid ngRepeat:dupes error -->
+			<div class="walletEntry" ng-repeat="wallet in data.wallets track by wallet.address">
+				<table class="table-balances">
+					<tr>
+						<td><strong>{{wallet.label}}</strong></td>
+					</tr>
+					<tr>
+						<td class="walletDetail">{{wallet.address}}</td>
+					</tr>
+					<tr>
+						<td class="walletDetail">
+							<span ng-show="wallet.error" class="error" ng-bind="wallet.error"></span>
+							<span ng-show="!wallet.error" class="meowsLabel">MEOWs</span>
+							<div ng-class="{balance: !wallet.error, error: wallet.error}" class="walletBalance currency">{{wallet.balance | number:4}}</div>						
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

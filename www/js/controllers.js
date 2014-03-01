@@ -4,6 +4,10 @@ angular.module('app.controllers', []).
     controller('addController', function($location, $log, $scope, settingsService, utilService, customService) {
 		$scope.wallet = {label:'', address:''};
 
+		$scope.cancel = function() {
+			$location.path('/edit');
+		}
+
 		$scope.save = function() {
 			$log.info('in save():', $scope.wallet);
 			var wallets = settingsService.getObject('wallets');
@@ -20,6 +24,10 @@ angular.module('app.controllers', []).
     }).
 	controller('editController', function($scope, $location, $log, settingsService) {
 		$scope.wallets = settingsService.getObject('wallets');
+
+		$scope.cancel = function() {
+			$location.path('/home');
+		}
 
 		$scope.remove = function(index) {
 			$scope.wallets.splice(index, 1);

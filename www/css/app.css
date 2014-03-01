@@ -195,6 +195,22 @@ body {
 	color: green;
 }
 
+.meowsLabel {
+	color: green;
+}
+
+.walletEntry {
+	padding-bottom: 15px;
+}
+
+.walletBalance {
+	float: right;
+}
+
+td.walletDetail {
+	padding-left: 15px;
+}
+
 .save {
 	color: blue;
 }
@@ -204,6 +220,10 @@ body {
 }
 
 .error {
+	color: red;
+}
+
+.cancel {
 	color: red;
 }
 
