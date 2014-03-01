@@ -100,6 +100,9 @@ angular.module('app.controllers', []).
 		}
 
         $scope.loadData = function() {
+			$scope.data.total = 0;
+			$scope.data.convertedTotal = 0;
+
 			angular.forEach($scope.data.wallets, function(wallet) {
 				blockexplorerAPIService.getBalance(wallet.address).success(function (balance, isError) {
 					if (isError) {
