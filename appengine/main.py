@@ -42,7 +42,7 @@ def getBalance(address=''):
     if (len(query) > 0):
         mReturn = query['callback'] + '({balance:' + balance + '})'
 
-    logging.info("Returning data for getBalance(" + address + "): " + mReturn)
+    logging.info("getBalance(" + address + "): " + mReturn)
     return mReturn
 
 @bottle.route('/api/trading-meow')
@@ -58,12 +58,11 @@ def tradingMEOW(currency='BTC'):
         return mReturn
 
     if (currency != 'BTC'):
-        logging.info('currency is: ' + currency)
         btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
         if (not btcCurrency):
             logging.warn("No data found in memcache for trading_BTC_" + currency)
             return mReturn
-        logging.info('meowBtc: ' + str(meowBtc) + ', ' + 'btcCurrency: ' + str(btcCurrency))
+        #logging.info('meowBtc: ' + str(meowBtc) + ', ' + 'btcCurrency: ' + str(btcCurrency))
         mReturn = Decimal(meowBtc['price']) * Decimal(btcCurrency['price'])
     else:
         mReturn = meowBtc['price']
@@ -72,7 +71,7 @@ def tradingMEOW(currency='BTC'):
     if (len(query) > 0):
         mReturn = query['callback'] + '({price:' + str(mReturn) + '})'
 
-    logging.info("Returning data for trading MEOW_" + currency + ": " + str(mReturn))
+    logging.info("tradingMEOW(" + currency + "): " + str(mReturn))
     return str(mReturn)
 
 def pullTradingPair(currency1='MEOW', currency2='BTC'):
