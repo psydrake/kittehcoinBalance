@@ -10,9 +10,8 @@ KittehCoin Balance consists of two parts:
 
 The front end communicates with the back end via [JSONP](http://en.wikipedia.org/wiki/JSONP) calls. The backend polls cryptocoincharts.info every 10 minutes, and it stores this data in [memcache](https://developers.google.com/appengine/docs/python/memcache/) for all subsequent client requests, in order to reduce load on the CryptoCoinCharts server. Wallet balance lookups from the Kitteh Coin Block Explorer [API](http://kittehcoinblockexplorer.com/chain/Kittehcoin/q) occur on demand.
 
-## Install On Your Phone / Tablet
-
-## Use As A Web App
+## Install On Your Device
+* [KittehCoin Balance for Android](https://play.google.com/store/apps/details?id=net.edrake.kittehcoinbalance)
 * [KittehCoin Balance in the Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
 * [KittehCoin Balance as a Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
 
