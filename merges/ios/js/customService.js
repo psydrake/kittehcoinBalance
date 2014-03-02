@@ -3,51 +3,6 @@ angular.module('app.customService', []).
     factory('customService', function($timeout) {
 		// custom functions for iOS
 
-		var createBannerView = function() {
-			var am = window.plugins.AdMob;
-		    am.createBannerView({
-				'publisherId': 'ca-app-pub-8928397865273246/7738621011',
-				'adSize': am.AD_SIZE.BANNER,
-				'bannerAtTop': false
-			}, function() {
-				requestAd();
-			}, function(){
-				// fail quietly
-			});
-		};
-
-		var requestAd = function() {
-			window.plugins.AdMob.requestAd({
-				'isTesting': false,
-				'extras': {
-					'color_bg': 'FFFFFF',
-					'color_bg_top': 'FFFFFF',
-					'color_border': 'FFFFFF',
-					'color_link': '000080',
-					'color_text': '808080',
-					'color_url': '008000'
-				},
-		    },
-			function() {
-				showAd();
-			},
-	   		function () { 
-				// fail quietly
-			});
-		};
-
-		var showAd = function() {
-			window.plugins.AdMob.showAd( 
-				true, // or false
-				function() {
-					// yay
-				},
-			    function() {
-					// fail quietly
-				}
-			);
-		};
-
         return {
 			openLink: function(link) {
 				// Use in-app browser for iOS
@@ -69,10 +24,8 @@ angular.module('app.customService', []).
 
 			doCustomActions: function() {
 				$timeout(function() {
-					createBannerView();
-
 					if (typeof analytics !== "undefined") {
-						analytics.startTrackerWithId('UA-47455659-1');
+						analytics.startTrackerWithId('UA-48304680-2');
 					}
 				}, 1000);
 			}
