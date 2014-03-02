@@ -13,7 +13,8 @@ The front end communicates with the back end via [JSONP](http://en.wikipedia.org
 ## Install On Your Phone / Tablet
 
 ## Use As A Web App
-
+* [KittehCoin Balance in the Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
+* [KittehCoin Balance as a Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
 
 ## Logo
 The KittehCoin Balance [logo](http://d2f04lgzuo9226.cloudfront.net/img/kittehcoinBalance_logo_1536.png) 
