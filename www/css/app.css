@@ -231,3 +231,7 @@ td.walletDetail {
 	background: white;
 	border-radius: 12px;
 }
+
+.fine-print {
+	font-size: smaller;
+}
