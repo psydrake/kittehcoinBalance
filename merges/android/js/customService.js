@@ -18,11 +18,9 @@ angular.module('app.customService', []).
 			doCustomActions: function() {
 				$timeout(function() {
 					if (typeof analytics !== "undefined") {
-						analytics.startTrackerWithId('UA-47455659-1');
+						analytics.startTrackerWithId('UA-48304680-2');
 					}
 				}, 1000);
-
-				// Note: AdMob handled by com.google.ads.* in litecoinEasyCheck.java
 			}
 		}
 	});
