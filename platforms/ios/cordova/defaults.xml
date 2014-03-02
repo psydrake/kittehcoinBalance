@@ -24,9 +24,9 @@
     <feature name="InAppBrowser">
         <param name="ios-package" value="CDVInAppBrowser" />
     </feature>
-    <name>Litecoin Easy Check</name>
+    <name>KittehCoin Balance</name>
     <description>
-		Check the market price of Litecoin. Simple and easy. Backend caches data from the CryptoCoinCharts.info API.
+		See how meowny KittehCoin you own and how much they’re worth.
     </description>
     <author email="drakee@gmail.com" href="https://github.com/psydrake">
         Drake Emko
