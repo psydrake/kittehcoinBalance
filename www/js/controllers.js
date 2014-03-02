@@ -86,7 +86,7 @@ angular.module('app.controllers', []).
 			}
 		}
 	}).
-    controller('homeController', function($scope, $rootScope, $location, $log, blockexplorerAPIService, cryptocoinchartsAPIService, utilService, settingsService, customService) {
+    controller('homeController', function($scope, $rootScope, $location, $log, blockexplorerAPIService, cryptocoinchartsAPIService, settingsService, customService) {
 		$scope.data = {
 			total: 0, 
 			convertedTotal: 0, 
