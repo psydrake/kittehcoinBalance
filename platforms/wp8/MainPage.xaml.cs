@@ -33,9 +33,7 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
 
-using GoogleAds;
-
-namespace net.edrake.litecoineasycheck
+namespace net.edrake.kittehcoinbalance
 {
     public partial class MainPage : PhoneApplicationPage
     {
@@ -53,14 +51,5 @@ namespace net.edrake.litecoineasycheck
             this.CordovaView.Loaded -= CordovaView_Loaded;
         }
 
-        private void OnAdReceived(object sender, AdEventArgs e)
-        {
-            //Debug.WriteLine("Received ad successfully");
-        }
-
-        private void OnFailedToReceiveAd(object sender, AdErrorEventArgs errorCode)
-        {
-            //Debug.WriteLine("Failed to receive ad with error " + errorCode.ErrorCode);
-        }
     }
 }

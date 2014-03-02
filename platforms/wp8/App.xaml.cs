@@ -32,7 +32,7 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace net.edrake.litecoineasycheck
+namespace net.edrake.kittehcoinbalance
 {
     public partial class App : Application
     {
