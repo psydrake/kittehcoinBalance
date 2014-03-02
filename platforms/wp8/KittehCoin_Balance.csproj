@@ -9,8 +9,8 @@
         <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>net.edrake.litecoineasycheck</RootNamespace>
-        <AssemblyName>net.edrake.litecoineasycheck</AssemblyName>
+        <RootNamespace>net.edrake.kittehcoinbalance</RootNamespace>
+        <AssemblyName>net.edrake.kittehcoinbalance</AssemblyName>
         <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
         <SilverlightVersion>
         </SilverlightVersion>
@@ -21,9 +21,9 @@
         <SupportedCultures>en-US</SupportedCultures>
         <XapOutputs>true</XapOutputs>
         <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-        <XapFilename>CordovaAppProj_$(Configuration)_$(Platform).xap</XapFilename>
+        <XapFilename>net.edrake.kittehcoinbalance.xap</XapFilename>
         <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-        <SilverlightAppEntry>net.edrake.litecoineasycheck.App</SilverlightAppEntry>
+        <SilverlightAppEntry>net.edrake.kittehcoinbalance.App</SilverlightAppEntry>
         <ValidateXaml>true</ValidateXaml>
         <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
         <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
@@ -240,6 +240,9 @@
         <Content Include="www\cordova.js" />
     </ItemGroup>
     <ItemGroup>
+        <Content Include="www\cordova_plugins.js" />
+    </ItemGroup>
+    <ItemGroup>
         <Content Include="www\css\app.css" />
     </ItemGroup>
     <ItemGroup>
@@ -255,10 +258,16 @@
         <Content Include="www\favicon.ico" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="www\img\icon-28.png" />
+        <Content Include="www\img\bg_192.png" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="www\img\litecoinEasyCheck_128.png" />
+        <Content Include="www\img\kittehcoinBalance_logo_128.png" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="www\img\KittehCoin_128.png" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="www\img\KittehCoin_32.png" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="www\img\logo.png" />
@@ -1212,10 +1221,19 @@
         <Content Include="www\lib\persist-min.js" />
     </ItemGroup>
     <ItemGroup>
+        <Content Include="www\lib\underscore-min.js" />
+    </ItemGroup>
+    <ItemGroup>
         <Content Include="www\main.html" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="www\partials\about.html" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="www\partials\add.html" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="www\partials\edit.html" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="www\partials\home.html" />
@@ -1228,8 +1246,5 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="www\plugins\org.apache.cordova.inappbrowser\www\InAppBrowser.js" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="www\cordova_plugins.js" />
     </ItemGroup>
 </Project>
