@@ -1,5 +1,5 @@
 # package up metadata for the chrome web store
-zip -r app.zip app
+zip -r chrome.zip chrome
 
 # clean up working web app directory
 rm -fr www/*
