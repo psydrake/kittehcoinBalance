@@ -1,17 +1,17 @@
 {
   "version": "1.0.1",
-  "name": "Litecoin Easy Check",
-  "description": "Check the market price of Litecoin. Simple and easy. Backend caches data from the cryptocoincharts.info API.",
+  "name": "KittehCoin Balance",
+  "description": "See how meowny KittehCoin you own and how much they're worth.",
   "launch_path": "/main.html",
   "icons": {
-    "16": "/img/litecoinEasyCheck_16.png",
-    "32": "/img/litecoinEasyCheck_32.png",
-    "48": "/img/litecoinEasyCheck_48.png",
-    "60": "/img/litecoinEasyCheck_60.png",
-    "90": "/img/litecoinEasyCheck_90.png",
-    "120": "/img/litecoinEasyCheck_120.png",
-    "128": "/img/litecoinEasyCheck_128.png",
-    "256": "/img/litecoinEasyCheck_256.png"
+    "16": "/img/kittehcoinBalance_logo_16.png",
+    "32": "/img/kittehcoinBalance_logo_32.png",
+    "48": "/img/kittehcoinBalance_logo_48.png",
+    "60": "/img/kittehcoinBalance_logo_60.png",
+    "90": "/img/kittehcoinBalance_logo_90.png",
+    "120": "/img/kittehcoinBalance_logo_120.png",
+    "128": "/img/kittehcoinBalance_logo_128.png",
+    "256": "/img/kittehcoinBalance_logo_256.png"
   },
   "developer": {
     "name": "Drake Emko",
