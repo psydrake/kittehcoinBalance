@@ -5,7 +5,7 @@ zip -r chrome.zip chrome
 rm -fr www/*
 
 # copy web assets from main project's www directory
-cp -av ../../www/ www/
+cp -av ../www/ www/
 
 # overwrite default web assets with any chrome-specific versions of those files
 cp -av merges/ www/
