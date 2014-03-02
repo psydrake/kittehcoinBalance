@@ -10,7 +10,7 @@
     <div class="row-fluid">
 		<div class="span12">
 		<!-- ng-repeat... track by wallet.address avoid ngRepeat:dupes error -->
-			<div class="walletEntry" ng-repeat="wallet in data.wallets track by wallet.address">
+			<div class="walletEntry" ng-repeat="wallet in data.wallets track by wallet.label + wallet.address">
 				<table class="table-balances">
 					<tr>
 						<td><strong>{{wallet.label}}</strong></td>

@@ -68,8 +68,9 @@ angular.module('app.controllers', []).
 		}
 
 		$scope.save = function() {
-			// do some basic validation
 			$scope.errors = [];
+
+			// do some basic validation
 			for (var i=0; i < $scope.wallets.length; i++) {
 				var error = utilService.validateWallet($scope.wallets[i]);
 				if (error) {
