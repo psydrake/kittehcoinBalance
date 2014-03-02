@@ -16,7 +16,8 @@ The front end communicates with the back end via [JSONP](http://en.wikipedia.org
 
 
 ## Logo
-The KittehCoin Balance logo is modified from an [image](http://commons.wikimedia.org/wiki/File:Green-emblem-scales.svg)
+The KittehCoin Balance [logo](http://d2f04lgzuo9226.cloudfront.net/img/kittehcoinBalance_logo_1536.png) 
+is modified from an [image](http://commons.wikimedia.org/wiki/File:Green-emblem-scales.svg)
 licensed under the [Creative Commons Attribution-Share Alike 2.5 Generic](http://creativecommons.org/licenses/by-sa/2.5/deed.en)
 license, originally modified by [Danieldnm](http://commons.wikimedia.org/wiki/User:Danieldnm).
 
