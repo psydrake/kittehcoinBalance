@@ -12,6 +12,8 @@ The front end communicates with the back end via [JSONP](http://en.wikipedia.org
 
 ## Install On Your Device
 * [KittehCoin Balance for Android](https://play.google.com/store/apps/details?id=net.edrake.kittehcoinbalance)
+* [KittehCoin Balance for Amazon Kindle Fire](http://www.amazon.com/Drake-Emko-KittehCoin-Balance/dp/B00IQN7P74)
+* [KittehCoin Balance for FirefoxOS](https://marketplace.firefox.com/app/kittehcoin-balance)
 * [KittehCoin Balance in the Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
 * [KittehCoin Balance as a Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
 
