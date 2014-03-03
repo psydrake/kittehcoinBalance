@@ -105,6 +105,7 @@ angular.module('app.controllers', []).
 			$scope.data.convertedTotal = 0;
 
 			angular.forEach($scope.data.wallets, function(wallet) {
+				delete wallet.error;
 				blockexplorerAPIService.getBalance(wallet.address).success(function (balance, isError) {
 					if (isError) {
 						wallet.error = 'Error - is wallet address correct?';
