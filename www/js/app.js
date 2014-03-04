@@ -42,12 +42,8 @@ app.run(function($rootScope, $location, $timeout, $log, settingsService, customS
 	}
 
     $rootScope.loadData = function() {
-		$rootScope.loadingClass = 'fa-spin';
         $log.info('loadData! ' + $location.path());
         $rootScope.$broadcast('refresh', $location.path());
-		$timeout(function() {
-				$rootScope.loadingClass = ''; // stop spinner
-			}, 2000);
     };
 
 	customService.doCustomActions(); // perform platform-specific javascript

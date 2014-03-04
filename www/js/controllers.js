@@ -87,12 +87,13 @@ angular.module('app.controllers', []).
 			}
 		}
 	}).
-    controller('homeController', function($scope, $rootScope, $location, $log, blockexplorerAPIService, cryptocoinchartsAPIService, settingsService, customService) {
+    controller('homeController', function($scope, $rootScope, $location, $log, $timeout, blockexplorerAPIService, cryptocoinchartsAPIService, settingsService, customService) {
 		$scope.data = {
 			total: 0, 
 			convertedTotal: 0, 
 			currency: settingsService.getValue('preferredCurrency'),
-			wallets: settingsService.getObject('wallets')
+			wallets: settingsService.getObject('wallets'),
+			loadCount: 0
 		};
 
 		if (!$scope.data.wallets || $scope.data.wallets.length === 0) {
@@ -101,6 +102,9 @@ angular.module('app.controllers', []).
 		}
 
         $scope.loadData = function() {
+			$rootScope.loadingClass = 'fa-spin'; // start refresh spinner
+			$scope.data.loadCount = $scope.data.wallets.length; // counter to let us know when all wallet data is loaded
+
 			$scope.data.total = 0;
 			$scope.data.convertedTotal = 0;
 
@@ -116,6 +120,7 @@ angular.module('app.controllers', []).
 
 					cryptocoinchartsAPIService.convert($scope.data.currency, wallet.balance).success(function(price) {
 						$scope.data.convertedTotal += Number(price);
+						$scope.data.loadCount -= 1; // when loadCount reaches 0, we are done
 					});
 				});
 			});
@@ -126,6 +131,14 @@ angular.module('app.controllers', []).
                 $scope.loadData();
             }
         });
+
+		$scope.$watch('data.loadCount', function(loadCount) {
+			if (loadCount < 1) {
+				$timeout(function() {
+					$rootScope.loadingClass = ''; // stop refresh spinner
+				}, 1000); // give it a second to spin, at least
+			}
+		});
 
         $rootScope.loadData();
 
