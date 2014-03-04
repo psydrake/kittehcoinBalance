@@ -60,6 +60,8 @@ body {
     text-align: center;
 	padding-top: 32px;
 	padding-bottom: 32px;
+	padding-right: 15px;
+	padding-left: 15px;
 }
 .jumbotron h1 {
     /*font-size: 72px;*/
