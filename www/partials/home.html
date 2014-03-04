@@ -16,10 +16,10 @@
 						<td><strong>{{wallet.label}}</strong></td>
 					</tr>
 					<tr>
-						<td class="walletDetail"><span class="walletAddress">{{wallet.address}}</span></td>
+						<td><span class="walletAddress">{{wallet.address}}</span></td>
 					</tr>
 					<tr>
-						<td class="walletDetail">
+						<td>
 							<span ng-class="{balance: !wallet.error, error: wallet.error}" class="currency">{{wallet.balance | number:4}}</span> MEOWs
 							<span ng-show="wallet.error" class="error" ng-bind="wallet.error"></span>
 						</td>
