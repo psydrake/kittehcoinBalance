@@ -208,6 +208,10 @@ td.walletDetail {
 	padding-left: 15px;
 }
 
+.walletAddress {
+	font-size: smaller;
+}
+
 .save {
 	color: blue;
 }
