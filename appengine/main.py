@@ -15,8 +15,8 @@ from decimal import *
 # TODO: name and list your controllers here so their routes become accessible.
 from server.controllers import RESOURCE_NAME_controller
 
-BLOCKEXPLORER_URL = 'http://kitexplorer.tk/chain/Kittehcoin/q/addressbalance/'
-BLOCKEXPLORER_URL_BACKUP = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/'
+BLOCKEXPLORER_URL = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/'
+BLOCKEXPLORER_URL_BACKUP = 'http://kitexplorer.tk/chain/Kittehcoin/q/addressbalance/'
 TRADING_PAIR_URL = 'http://www.cryptocoincharts.info/v2/api/tradingPair/'
 TIMEOUT_DEADLINE = 30 # seconds
 
