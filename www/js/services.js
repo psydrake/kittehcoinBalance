@@ -151,6 +151,7 @@ angular.module('app.services', []).
 
         cccAPI.convert = function(currency, balance) {
 			var url = 'http://kittehcoinbalance.appspot.com/api/trading-meow/';
+			//var url = 'http://localhost:10080/api/trading-meow/';
 
             if (currency) {
 		        url = url + currency;
@@ -175,6 +176,7 @@ angular.module('app.services', []).
 
         beAPI.getBalance = function(address) {
 			var url = 'http://kittehcoinbalance.appspot.com/api/balance/';
+			//var url = 'http://localhost:10080/api/balance/';
 
             if (address) {
 		        url = url + address;
