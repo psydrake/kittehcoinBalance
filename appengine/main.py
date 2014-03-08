@@ -18,7 +18,7 @@ from server.controllers import RESOURCE_NAME_controller
 BLOCKEXPLORER_URL = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/'
 BLOCKEXPLORER_URL_BACKUP = 'http://kitexplorer.tk/chain/Kittehcoin/q/addressbalance/'
 TRADING_PAIR_URL = 'http://www.cryptocoincharts.info/v2/api/tradingPair/'
-TIMEOUT_DEADLINE = 20 # seconds
+TIMEOUT_DEADLINE = 15 # seconds
 
 # Run the Bottle wsgi application. We don't need to call run() since our
 # application is embedded within an App Engine WSGI application server.
@@ -39,13 +39,21 @@ def getBalance(address=''):
 
     url = BLOCKEXPLORER_URL + address
     data = None
+    useBackupUrl = False
     try:
         #data = urllib2.urlopen(url)
         data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
+        if (!data.content):
+            logging.warn('No content returned from ' + url)
+            useBackupUrl = True
     except:
         e = sys.exc_info()[0]
+        logging.warn('Error: ' + str(e) + ' when fetching ' + url)
+        useBackupUrl = True
+
+    if (useBackupUrl):
         backupUrl = BLOCKEXPLORER_URL_BACKUP + address
-        logging.warn('Error: ' + str(e) + ' when fetching ' + url + '. Now trying ' + backupUrl)
+        logging.warn('Now trying ' + backupUrl)
         data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
 
     dataDict = json.loads(data.content)
