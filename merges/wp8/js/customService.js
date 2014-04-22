@@ -17,7 +17,7 @@ angular.module('app.customService', []).
 			},
 
 			doCustomActions: function() {
-				// NOOP - admob handled in MainPage.xaml and MainPage.xaml.cs
+				// NOOP
 			}
 		}
 	});
