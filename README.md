@@ -11,11 +11,13 @@ KittehCoin Balance consists of two parts:
 The front end communicates with the back end via [JSONP](http://en.wikipedia.org/wiki/JSONP) calls. The backend polls cryptocoincharts.info every 10 minutes, and it stores this data in [memcache](https://developers.google.com/appengine/docs/python/memcache/) for all subsequent client requests, in order to reduce load on the CryptoCoinCharts server. Wallet balance lookups from the Kitteh Coin Block Explorer [API](http://kittehcoinblockexplorer.com/chain/Kittehcoin/q) occur on demand.
 
 ## Install On Your Device
-* [KittehCoin Balance for Android](https://play.google.com/store/apps/details?id=net.edrake.kittehcoinbalance)
-* [KittehCoin Balance for Amazon Kindle Fire](http://www.amazon.com/Drake-Emko-KittehCoin-Balance/dp/B00IQN7P74)
-* [KittehCoin Balance for FirefoxOS](https://marketplace.firefox.com/app/kittehcoin-balance)
-* [KittehCoin Balance in the Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
-* [KittehCoin Balance as a Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
+* [Android](https://play.google.com/store/apps/details?id=net.edrake.kittehcoinbalance)
+* [Amazon Kindle Fire](http://www.amazon.com/Drake-Emko-KittehCoin-Balance/dp/B00IQN7P74)
+* [Windows Phone](http://www.windowsphone.com/en-us/store/app/kittehcoin-balance/342590f6-b47e-488f-a4f6-c1775ff1e592)
+* [Blackberry 10](http://appworld.blackberry.com/webstore/content/53031887/?lang=en)
+* [FirefoxOS](https://marketplace.firefox.com/app/kittehcoin-balance)
+* [Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
+* [Browse As A Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
 
 ## Logo
 The KittehCoin Balance [logo](http://d2f04lgzuo9226.cloudfront.net/img/kittehcoinBalance_logo_1536.png) 
