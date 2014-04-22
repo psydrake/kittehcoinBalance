@@ -14,7 +14,7 @@ The front end communicates with the back end via [JSONP](http://en.wikipedia.org
 * [Android](https://play.google.com/store/apps/details?id=net.edrake.kittehcoinbalance)
 * [Amazon Kindle Fire](http://www.amazon.com/Drake-Emko-KittehCoin-Balance/dp/B00IQN7P74)
 * [Windows Phone](http://www.windowsphone.com/en-us/store/app/kittehcoin-balance/342590f6-b47e-488f-a4f6-c1775ff1e592)
-* [Blackberry 10](http://appworld.blackberry.com/webstore/content/53031887/?lang=en)
+* [Blackberry 10](http://appworld.blackberry.com/webstore/content/53031887/)
 * [FirefoxOS](https://marketplace.firefox.com/app/kittehcoin-balance)
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/kittehcoin-balance/ijhkeggnlfaafnjfmddgjfmlchpofggo)
 * [Browse As A Web Site](http://d2f04lgzuo9226.cloudfront.net/main.html)
