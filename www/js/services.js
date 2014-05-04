@@ -151,7 +151,7 @@ angular.module('app.services', []).
 
         cccAPI.convert = function(currency, balance) {
 			var url = 'http://kittehcoinbalance.appspot.com/api/trading-meow/';
-			//var url = 'http://localhost:10080/api/trading-meow/';
+			var btcURL = url + 'BTC';
 
             if (currency) {
 		        url = url + currency;
@@ -159,12 +159,22 @@ angular.module('app.services', []).
 
             return {
                 success: function(fn) {
-					//$log.info('in success! fn:', fn);
-					$http.jsonp(url + '?callback=JSON_CALLBACK').success(function(data, status, headers, config) {
-						var price  = data['price'];
-						$log.info('got price for currency', currency, ':', price);
-						fn(Number(price) * Number(balance));
+					$http.jsonp(btcURL + '?callback=JSON_CALLBACK').success(function(btcData, status, headers, config) {
+						var btcPrice  = btcData['price'];
+						$log.info('got price for BTC:', btcPrice);
+
+						if (currency === 'BTC') {
+							fn(Number(btcPrice) * Number(balance), btcPrice, btcPrice);
+						}
+						else {
+							$http.jsonp(url + '?callback=JSON_CALLBACK').success(function(data, status, headers, config) {
+								var price  = data['price'];
+								$log.info('got price for currency', currency, ':', price);
+								fn(Number(price) * Number(balance), price, btcPrice);
+							});
+						}
 					});
+
                 }
             };
         }
