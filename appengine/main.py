@@ -41,14 +41,12 @@ def getBalance(address=''):
     data = None
     useBackupUrl = False
     try:
-        #data = urllib2.urlopen(url)
         data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
         if (not data or not data.content):
             logging.warn('No content returned from ' + url)
             useBackupUrl = True
     except:
-        e = sys.exc_info()[0]
-        logging.warn('Error: ' + str(e) + ' when fetching ' + url)
+        logging.warn('Error retrieving ' + url + ' - status code: ' + str(data.status_code))
         useBackupUrl = True
 
     if (useBackupUrl):
