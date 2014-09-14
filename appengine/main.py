@@ -18,6 +18,11 @@ from server.controllers import RESOURCE_NAME_controller
 BLOCKEXPLORER_URL = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/'
 BLOCKEXPLORER_URL_BACKUP = 'http://kitexplorer.tk/chain/Kittehcoin/q/addressbalance/'
 TRADING_PAIR_URL = 'http://www.cryptocoincharts.info/v2/api/tradingPair/'
+TRADING_PAIR_URL_CRYPTSY = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=231'
+TRADING_PAIR_URL_USD_BACKUP = 'https://coinbase.com/api/v1/prices/buy' 
+BTER_LTC_BTC_URL = 'http://data.bter.com/api/1/ticker/ltc_btc'
+BTCAVERAGE_URL = 'https://api.bitcoinaverage.com/ticker/' # used for BTC / (CNY, EUR, GBP, AUD)
+
 TIMEOUT_DEADLINE = 10 # seconds
 
 # Run the Bottle wsgi application. We don't need to call run() since our
@@ -69,24 +74,32 @@ def getBalance(address=''):
 @bottle.route('/api/trading-meow')
 @bottle.route('/api/trading-meow/')
 @bottle.route('/api/trading-meow/<currency:re:[A-Z][A-Z][A-Z]>')
-def tradingMEOW(currency='BTC'):
+def tradingMEOW(currency='LTC'):
     response.content_type = 'application/json; charset=utf-8'
 
     mReturn = '{}'
-    meowBtc = json.loads(memcache.get('trading_MEOW_BTC'))
-    if (not meowBtc):
-        logging.warn("No data found in memcache for trading_MEOW_BTC")
+    meowLtc = json.loads(memcache.get('trading_MEOW_LTC'))
+    if (not meowLtc):
+        logging.warn("No data found in memcache for trading_MEOW_LTC")
         return mReturn
 
-    if (currency != 'BTC'):
+    ltcBtc = json.loads(memcache.get('trading_LTC_BTC'))
+    if (not ltcBtc and currency != 'LTC'):
+        logging.warn("No data found in memcache for trading_LTC_BTC")
+        return mReturn
+
+    if (currency not in ['LTC', 'BTC']):
         btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
         if (not btcCurrency):
             logging.warn("No data found in memcache for trading_BTC_" + currency)
             return mReturn
-        #logging.info('meowBtc: ' + str(meowBtc) + ', ' + 'btcCurrency: ' + str(btcCurrency))
-        mReturn = Decimal(meowBtc['price']) * Decimal(btcCurrency['price'])
+        # MEOW -> LTC -> BTC -> FIAT
+        mReturn = '%.10f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']) * Decimal(btcCurrency['price']))
+    elif (currency == 'BTC'):
+        # MEOW -> LTC -> BTC
+        mReturn = '%.10f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']))
     else:
-        mReturn = meowBtc['price']
+        mReturn = meowLtc['price']
 
     query = request.query.decode()
     if (len(query) > 0):
@@ -95,12 +108,65 @@ def tradingMEOW(currency='BTC'):
     logging.info("tradingMEOW(" + currency + "): " + str(mReturn))
     return str(mReturn)
 
-def pullTradingPair(currency1='MEOW', currency2='BTC'):
-    url = TRADING_PAIR_URL + currency1 + '_' + currency2
-    #data = urllib2.urlopen(url)
-    data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
+def pullTradingPair(currency1='MEOW', currency2='LTC'):
+    url = TRADING_PAIR_URL_CRYPTSY if (currency1 == 'MEOW' and currency2 == 'LTC') else TRADING_PAIR_URL + currency1 + '_' + currency2
+    data = None
+    useBackupUrl = False
+
+    try:
+        data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
+        if (not data or not data.content or data.status_code != 200):
+            logging.warn('No content returned from ' + url)
+            useBackupUrl = True
+    except:
+        logging.warn('Error retrieving ' + url)
+        useBackupUrl = True
+
+    if (useBackupUrl):
+        backupUrl = ''
+        if (currency1 == 'LTC' and currency2 == 'BTC'):
+            backupUrl = BTER_LTC_BTC_URL
+        elif (currency1 == 'BTC' and currency2 == 'USD'):
+            backupUrl = TRADING_PAIR_URL_USD_BACKUP
+        elif (currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']):
+            backupUrl = BTCAVERAGE_URL + currency2 + '/'
+        else:
+            logger.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
+            return
+
+        logging.warn('Now trying ' + backupUrl)
+        data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
 
     dataDict = json.loads(data.content)
+    if (useBackupUrl):
+        if (currency1 == 'BTC' and currency2 == 'USD'):
+            if (dataDict['subtotal']['currency'] == 'USD'):
+                dataDict = {'price': dataDict['subtotal']['amount']}
+                logging.info('BTC_USD: ' + dataDict['price'])
+            else:
+                logger.error('Unexpected JSON returned from URL ' + TRADING_PAIR_URL_USD_BACKUP)
+                return
+        elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']) \
+            or (currency1 == 'LTC' and currency2 == 'BTC')):
+            dataDict['price'] = dataDict['last']
+        else:
+            logger.error('Error loading trading pair from ' + url)
+            return
+
+    elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'USD', 'AUD']) \
+        or (currency1 == 'LTC' and currency2 == 'BTC')):
+        # standardize format of exchange rate data from different APIs (we will use 'price' as a key)
+        if (not dataDict['price'] and dataDict['last']):
+            dataDict['price'] = dataDict['last'] 
+
+    elif (currency1 == 'MEOW' and currency2 == 'LTC'):
+        if (dataDict['return']['markets']['MEOW']['label'] == "MEOW/LTC"):
+            dataDict = {'price': dataDict['return']['markets']['MEOW']['lasttradeprice']}
+            logging.info('MEOW_LTC: ' + dataDict['price'])
+        else:
+            logger.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
+            return
+
     tradingData = json.dumps(dataDict)
 
     memcache.set('trading_' + currency1 + '_' + currency2, tradingData)
@@ -108,10 +174,12 @@ def pullTradingPair(currency1='MEOW', currency2='BTC'):
 
 @bottle.route('/tasks/pull-cryptocoincharts-data')
 def pullCryptocoinchartsData():
-    pullTradingPair('MEOW', 'BTC')
-    pullTradingPair('BTC', 'CNY')
-    pullTradingPair('BTC', 'EUR')
+    pullTradingPair('MEOW', 'LTC')
+    pullTradingPair('LTC', 'BTC')
     pullTradingPair('BTC', 'USD')
+    pullTradingPair('BTC', 'EUR')
+    #pullTradingPair('BTC', 'GBP')
+    pullTradingPair('BTC', 'CNY')
     return "Done"
 
 @bottle.error(404)
