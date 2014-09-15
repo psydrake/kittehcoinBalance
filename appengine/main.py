@@ -109,10 +109,13 @@ def tradingMEOW(currency='LTC'):
     return str(mReturn)
 
 def pullTradingPair(currency1='MEOW', currency2='LTC'):
-    url = TRADING_PAIR_URL_CRYPTSY if (currency1 == 'MEOW' and currency2 == 'LTC') else TRADING_PAIR_URL + currency1 + '_' + currency2
+    # temporarily commenting out TRADING_PAIR_URL (cryptocoincharts.info) url, since they apparently changed their API
+    # relying on backup URLs
+    url = TRADING_PAIR_URL_CRYPTSY if (currency1 == 'MEOW' and currency2 == 'LTC') else ''  #TRADING_PAIR_URL + currency1 + '_' + currency2
     data = None
     useBackupUrl = False
 
+    logging.info('trading pair: ' + currency1 + '_' + currency2 + ', url: ' + url)
     try:
         data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
         if (not data or not data.content or data.status_code != 200):
@@ -131,31 +134,32 @@ def pullTradingPair(currency1='MEOW', currency2='LTC'):
         elif (currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']):
             backupUrl = BTCAVERAGE_URL + currency2 + '/'
         else:
-            logger.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
+            logging.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
             return
 
         logging.warn('Now trying ' + backupUrl)
         data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
 
     dataDict = json.loads(data.content)
+
     if (useBackupUrl):
         if (currency1 == 'BTC' and currency2 == 'USD'):
             if (dataDict['subtotal']['currency'] == 'USD'):
                 dataDict = {'price': dataDict['subtotal']['amount']}
                 logging.info('BTC_USD: ' + dataDict['price'])
             else:
-                logger.error('Unexpected JSON returned from URL ' + TRADING_PAIR_URL_USD_BACKUP)
+                logging.error('Unexpected JSON returned from URL ' + TRADING_PAIR_URL_USD_BACKUP)
                 return
         elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']) \
             or (currency1 == 'LTC' and currency2 == 'BTC')):
             dataDict['price'] = dataDict['last']
         else:
-            logger.error('Error loading trading pair from ' + url)
+            logging.error('Error loading trading pair from ' + url)
             return
 
     elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'USD', 'AUD']) \
         or (currency1 == 'LTC' and currency2 == 'BTC')):
-        # standardize format of exchange rate data from different APIs (we will use 'price' as a key)
+        # standardize format of exchange rate data from different APIs (we will use 'price' as a key)      
         if (not dataDict['price'] and dataDict['last']):
             dataDict['price'] = dataDict['last'] 
 
@@ -164,7 +168,7 @@ def pullTradingPair(currency1='MEOW', currency2='LTC'):
             dataDict = {'price': dataDict['return']['markets']['MEOW']['lasttradeprice']}
             logging.info('MEOW_LTC: ' + dataDict['price'])
         else:
-            logger.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
+            logging.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
             return
 
     tradingData = json.dumps(dataDict)
