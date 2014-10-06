@@ -21,7 +21,7 @@ TRADING_PAIR_URL = 'http://api.cryptocoincharts.info/tradingPair/'
 TRADING_PAIR_URL_CRYPTSY = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=231'
 TRADING_PAIR_URL_USD_BACKUP = 'https://coinbase.com/api/v1/prices/buy' 
 BTER_LTC_BTC_URL = 'http://data.bter.com/api/1/ticker/ltc_btc'
-BTCAVERAGE_URL = 'https://api.bitcoinaverage.com/ticker/' # used for BTC / (CNY, EUR, GBP, AUD)
+BTCAVERAGE_URL = 'https://api.bitcoinaverage.com/ticker/' # used for BTC / (CNY, GBP, EUR, AUD)
 
 TIMEOUT_DEADLINE = 10 # seconds
 
@@ -180,7 +180,7 @@ def pullCryptocoinchartsData():
     pullTradingPair('LTC', 'BTC')
     pullTradingPair('BTC', 'USD')
     pullTradingPair('BTC', 'EUR')
-    #pullTradingPair('BTC', 'GBP')
+    pullTradingPair('BTC', 'GBP')
     pullTradingPair('BTC', 'CNY')
     return "Done"
 
