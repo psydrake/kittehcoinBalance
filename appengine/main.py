@@ -76,38 +76,38 @@ def getBalance(address=''):
 @bottle.route('/api/trading-meow/')
 @bottle.route('/api/trading-meow/<currency:re:[A-Z][A-Z][A-Z]>')
 def tradingMEOW(currency='LTC'):
-    response.content_type = 'application/json; charset=utf-8'
+  response.content_type = 'application/json; charset=utf-8'
 
-    mReturn = '{}'
-    meowLtc = json.loads(memcache.get('trading_MEOW_LTC'))
-    if (not meowLtc):
-        logging.warn("No data found in memcache for trading_MEOW_LTC")
-        return mReturn
+  mReturn = '{}'
+  meowLtc = json.loads(memcache.get('trading_MEOW_LTC'))
+  if (not meowLtc):
+    logging.warn("No data found in memcache for trading_MEOW_LTC")
+    return mReturn
 
-    ltcBtc = json.loads(memcache.get('trading_LTC_BTC'))
-    if (not ltcBtc and currency != 'LTC'):
-        logging.warn("No data found in memcache for trading_LTC_BTC")
-        return mReturn
+  ltcBtc = json.loads(memcache.get('trading_LTC_BTC'))
+  if (not ltcBtc and currency != 'LTC'):
+    logging.warn("No data found in memcache for trading_LTC_BTC")
+    return mReturn
 
-    if (currency not in ['LTC', 'BTC']):
-        btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
-        if (not btcCurrency):
-            logging.warn("No data found in memcache for trading_BTC_" + currency)
-            return mReturn
-        # MEOW -> LTC -> BTC -> FIAT
-        mReturn = '%.10f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']) * Decimal(btcCurrency['price']))
-    elif (currency == 'BTC'):
-        # MEOW -> LTC -> BTC
-        mReturn = '%.10f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']))
-    else:
-        mReturn = meowLtc['price']
+  if (currency not in ['LTC', 'BTC']):
+    btcCurrency = json.loads(memcache.get('trading_BTC_' + currency))
+    if (not btcCurrency):
+      logging.warn("No data found in memcache for trading_BTC_" + currency)
+      return mReturn
+    # MEOW -> LTC -> BTC -> FIAT
+    mReturn = '%.12f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']) * Decimal(btcCurrency['price']))
+  elif (currency == 'BTC'):
+    # MEOW -> LTC -> BTC
+    mReturn = '%.12f' % (Decimal(meowLtc['price']) * Decimal(ltcBtc['price']))
+  else:
+    mReturn = meowLtc['price']
 
-    query = request.query.decode()
-    if (len(query) > 0):
-        mReturn = query['callback'] + '({price:' + str(mReturn) + '})'
+  query = request.query.decode()
+  if (len(query) > 0):
+    mReturn = query['callback'] + '({price:' + str(mReturn) + '})'
 
-    logging.info("tradingMEOW(" + currency + "): " + str(mReturn))
-    return str(mReturn)
+  logging.info("tradingMEOW(" + currency + "): " + str(mReturn))
+  return str(mReturn)
 
 def pullTradingPair(currency1='MEOW', currency2='LTC'):
   dataDict = None
@@ -118,7 +118,7 @@ def pullTradingPair(currency1='MEOW', currency2='LTC'):
     if (currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'USD', 'AUD']):
       data = bitcoinaverage_ticker(currency2)
       if (not data or not data.content or data.status_code != 200):
-        logging.warn('No content returned from ' + url)
+        logging.warn('No content returned for ' + currency1 + '_' + currency2)
         useBackupUrl = True
       else:
         dataDict = json.loads(data.content)
@@ -126,7 +126,7 @@ def pullTradingPair(currency1='MEOW', currency2='LTC'):
     else:
       data = cryptopia_ticker(currency1, currency2)
       if (not data or not data.content or data.status_code != 200):
-        logging.warn('No content returned from ' + url)
+        logging.warn('No content returned for ' + currency1 + '_' + currency2)
         useBackupUrl = True
       else:
         dataDict = json.loads(data.content)
