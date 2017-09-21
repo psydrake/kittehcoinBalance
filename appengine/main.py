@@ -15,15 +15,29 @@ from decimal import *
 # TODO: name and list your controllers here so their routes become accessible.
 from server.controllers import RESOURCE_NAME_controller
 
-BLOCKEXPLORER_URL = 'http://kittehcoinblockexplorer.com/chain/Kittehcoin/q/addressbalance/'
-BLOCKEXPLORER_URL_BACKUP = 'http://kitexplorer.tk/chain/Kittehcoin/q/addressbalance/'
-TRADING_PAIR_URL = 'http://api.cryptocoincharts.info/tradingPair/'
-TRADING_PAIR_URL_CRYPTSY = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=231'
-TRADING_PAIR_URL_USD_BACKUP = 'https://coinbase.com/api/v1/prices/buy' 
+import hashlib, hmac, time # for bitcoinaverage API
+import config # this file contains secret API key(s), and so it is in .gitignore
+
+BLOCKEXPLORER_URL = 'http://chainz.cryptoid.info/meow/api.dws?q=getbalance&a='
+TRADING_PAIR_URL_CRYPTOPIA = 'https://www.cryptopia.co.nz/api/GetMarket/'
 BTER_LTC_BTC_URL = 'http://data.bter.com/api/1/ticker/ltc_btc'
-BTCAVERAGE_URL = 'https://api.bitcoinaverage.com/ticker/' # used for BTC / (CNY, GBP, EUR, AUD)
 
 TIMEOUT_DEADLINE = 10 # seconds
+
+# used for BTC / (CNY, GBP, EUR, AUD)
+def bitcoinaverage_ticker(currency):
+  timestamp = int(time.time())
+  payload = '{}.{}'.format(timestamp, config.bitcoinaverage_public_key)
+  hex_hash = hmac.new(config.bitcoinaverage_secret_key.encode(), msg=payload.encode(), digestmod=hashlib.sha256).hexdigest()
+  signature = '{}.{}'.format(payload, hex_hash)
+
+  url = 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC' + currency
+  headers = {'X-Signature': signature}
+  return urlfetch.fetch(url, headers=headers, deadline=TIMEOUT_DEADLINE)
+
+def cryptopia_ticker(currency1, currency2):
+  url = TRADING_PAIR_URL_CRYPTOPIA + currency1 + '_' + currency2
+  return urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
 
 # Run the Bottle wsgi application. We don't need to call run() since our
 # application is embedded within an App Engine WSGI application server.
@@ -40,36 +54,23 @@ def home():
 
 @bottle.route('/api/balance/<address:re:[a-zA-Z0-9]+>')
 def getBalance(address=''):
-    response.content_type = 'application/json; charset=utf-8'
+  response.content_type = 'application/json; charset=utf-8'
 
-    url = BLOCKEXPLORER_URL + address
-    data = None
-    useBackupUrl = False
+  url = BLOCKEXPLORER_URL + address
+  data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
+  if (not data or not data.content or data.status_code != 200):
+    logging.warn('No content returned from ' + url + ': ' + str(data))
 
-    try:
-        data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
-        if (not data or not data.content or data.status_code != 200):
-            logging.warn('No content returned from ' + url)
-            useBackupUrl = True
-    except:
-        logging.warn('Error retrieving ' + url)
-        useBackupUrl = True
+  dataDict = json.loads(data.content)
+  balance = json.dumps(dataDict)
+  mReturn = balance
 
-    if (useBackupUrl):
-        backupUrl = BLOCKEXPLORER_URL_BACKUP + address
-        logging.warn('Now trying ' + backupUrl)
-        data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
+  query = request.query.decode()
+  if (len(query) > 0):
+    mReturn = query['callback'] + '({balance:' + balance + '})'
 
-    dataDict = json.loads(data.content)
-    balance = json.dumps(dataDict)
-    mReturn = balance
-
-    query = request.query.decode()
-    if (len(query) > 0):
-        mReturn = query['callback'] + '({balance:' + balance + '})'
-
-    logging.info("getBalance(" + address + "): " + mReturn)
-    return mReturn
+  logging.info("getBalance(" + address + "): " + mReturn)
+  return mReturn
 
 @bottle.route('/api/trading-meow')
 @bottle.route('/api/trading-meow/')
@@ -109,70 +110,43 @@ def tradingMEOW(currency='LTC'):
     return str(mReturn)
 
 def pullTradingPair(currency1='MEOW', currency2='LTC'):
-    url = TRADING_PAIR_URL_CRYPTSY if (currency1 == 'MEOW' and currency2 == 'LTC') else TRADING_PAIR_URL + currency1 + '_' + currency2
-    data = None
-    useBackupUrl = False
+  dataDict = None
+  useBackupUrl = False
+  logging.info('trading pair: ' + currency1 + '_' + currency2)
 
-    logging.info('trading pair: ' + currency1 + '_' + currency2 + ', url: ' + url)
-    try:
-        data = urlfetch.fetch(url, deadline=TIMEOUT_DEADLINE)
-        if (not data or not data.content or data.status_code != 200):
-            logging.warn('No content returned from ' + url)
-            useBackupUrl = True
-    except:
-        logging.warn('Error retrieving ' + url)
+  try:
+    if (currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'USD', 'AUD']):
+      data = bitcoinaverage_ticker(currency2)
+      if (not data or not data.content or data.status_code != 200):
+        logging.warn('No content returned from ' + url)
         useBackupUrl = True
+      else:
+        dataDict = json.loads(data.content)
+        dataDict['price'] = dataDict['last']
+    else:
+      data = cryptopia_ticker(currency1, currency2)
+      if (not data or not data.content or data.status_code != 200):
+        logging.warn('No content returned from ' + url)
+        useBackupUrl = True
+      else:
+        dataDict = json.loads(data.content)
+        dataDict['price'] = dataDict['Data']['LastPrice']
 
-    if (useBackupUrl):
-        backupUrl = ''
-        if (currency1 == 'LTC' and currency2 == 'BTC'):
-            backupUrl = BTER_LTC_BTC_URL
-        elif (currency1 == 'BTC' and currency2 == 'USD'):
-            backupUrl = TRADING_PAIR_URL_USD_BACKUP
-        elif (currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']):
-            backupUrl = BTCAVERAGE_URL + currency2 + '/'
-        else:
-            logging.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
-            return
+  except:
+    logging.warn('Error retrieving data for ' + currency1 + '_' + currency2)
+    useBackupUrl = True
 
-        logging.warn('Now trying ' + backupUrl)
-        data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
-
+  if (useBackupUrl and currency1 == 'LTC' and currency2 == 'BTC'):
+    backupUrl = BTER_LTC_BTC_URL
+    logging.warn('Now trying ' + backupUrl)
+    data = urlfetch.fetch(backupUrl, deadline=TIMEOUT_DEADLINE)
     dataDict = json.loads(data.content)
+    dataDict['price'] = dataDict['last']
 
-    if (useBackupUrl):
-        if (currency1 == 'BTC' and currency2 == 'USD'):
-            if (dataDict['subtotal']['currency'] == 'USD'):
-                dataDict = {'price': dataDict['subtotal']['amount']}
-                logging.info('BTC_USD: ' + dataDict['price'])
-            else:
-                logging.error('Unexpected JSON returned from URL ' + TRADING_PAIR_URL_USD_BACKUP)
-                return
-        elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'AUD']) \
-            or (currency1 == 'LTC' and currency2 == 'BTC')):
-            dataDict['price'] = dataDict['last']
-        else:
-            logging.error('Error loading trading pair from ' + url)
-            return
+  tradingData = json.dumps(dataDict)
 
-    elif ((currency1 == 'BTC' and currency2 in ['CNY', 'EUR', 'GBP', 'USD', 'AUD']) \
-        or (currency1 == 'LTC' and currency2 == 'BTC')):
-        # standardize format of exchange rate data from different APIs (we will use 'price' as a key)      
-        if (not dataDict['price'] and dataDict['last']):
-            dataDict['price'] = dataDict['last'] 
-
-    elif (currency1 == 'MEOW' and currency2 == 'LTC'):
-        if (dataDict['return']['markets']['MEOW']['label'] == "MEOW/LTC"):
-            dataDict = {'price': dataDict['return']['markets']['MEOW']['lasttradeprice']}
-            logging.info('MEOW_LTC: ' + dataDict['price'])
-        else:
-            logging.error('Cannot get trading pair for ' + currency1 + ' / ' + currency2)
-            return
-
-    tradingData = json.dumps(dataDict)
-
-    memcache.set('trading_' + currency1 + '_' + currency2, tradingData)
-    logging.info('Stored in memcache for key trading_' + currency1 + '_' + currency2 + ': ' + tradingData)
+  memcache.set('trading_' + currency1 + '_' + currency2, tradingData)
+  logging.info('Stored in memcache for key trading_' + currency1 + '_' + currency2 + ': ' + tradingData)
 
 @bottle.route('/tasks/pull-cryptocoincharts-data')
 def pullCryptocoinchartsData():
